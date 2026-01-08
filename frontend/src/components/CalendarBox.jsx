@@ -21,7 +21,7 @@ const CalendarBox = ({ trips, selectedDate, onDateSelect }) => {
     if (!day) return null
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
     return trips.find(trip => 
-      dateStr >= trip.startDate && dateStr <= trip.endDate
+      dateStr >= trip.start_date && dateStr <= trip.end_date
     )
   }
 

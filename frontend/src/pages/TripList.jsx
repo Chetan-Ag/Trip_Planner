@@ -116,7 +116,12 @@ const TripList = () => {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginLeft: '1rem' }}>
                     <Link to={`/itinerary/${trip.id}`} className="btn btn-primary">View</Link>
-                    <Link to={`/build-itinerary/${trip.id}`} className="btn" style={{ background: '#28a745', color: 'white' }}>Edit</Link>
+                    {trip.status !== 'completed' && (
+                      <Link to={`/build-itinerary/${trip.id}`} className="btn" style={{ background: '#28a745', color: 'white' }}>Edit</Link>
+                    )}
+                    {trip.status === 'completed' && (
+                      <span style={{ padding: '0.5rem', background: '#28a745', color: 'white', borderRadius: '4px', fontSize: '0.8rem' }}>✓ Completed</span>
+                    )}
                     <button
                       onClick={() => deleteTrip(trip.id)}
                       className="btn"

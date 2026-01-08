@@ -42,8 +42,8 @@ class TripBase(BaseModel):
     name: str
     country: Optional[str] = None
     description: Optional[str] = None
-    start_date: str  # Accept as string and parse in backend
-    end_date: str    # Accept as string and parse in backend
+    start_date: date  # Changed to date type
+    end_date: date    # Changed to date type
     budget: Optional[Decimal] = None
 
 class TripCreate(TripBase):

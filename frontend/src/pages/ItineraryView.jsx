@@ -11,6 +11,7 @@ const ItineraryView = () => {
   const [itinerary, setItinerary] = useState([])
   const [loading, setLoading] = useState(true)
   const [totalCost, setTotalCost] = useState(0)
+  const [finalizing, setFinalizing] = useState(false)
 
   useEffect(() => {
     loadTripData()
@@ -32,6 +33,24 @@ const ItineraryView = () => {
       console.error('Error loading trip data:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleFinalizeTrip = async () => {
+    if (!confirm('Are you sure you want to finalize this trip? This will mark it as completed and add it to your history.')) {
+      return
+    }
+    
+    setFinalizing(true)
+    try {
+      await tripApi.finalizeTrip(tripId)
+      alert('Trip finalized successfully! It has been added to your history.')
+      navigate('/trips')
+    } catch (error) {
+      console.error('Error finalizing trip:', error)
+      alert('Failed to finalize trip. Please try again.')
+    } finally {
+      setFinalizing(false)
     }
   }
 
@@ -124,9 +143,22 @@ const ItineraryView = () => {
                 onClick={() => navigate(`/build-itinerary/${tripId}`)}
                 className="btn"
                 style={{ background: '#6c757d', color: 'white' }}
+                disabled={trip?.status === 'completed'}
               >
                 Edit Itinerary
               </button>
+              
+              {trip?.status !== 'completed' && (
+                <button 
+                  onClick={handleFinalizeTrip}
+                  className="btn"
+                  style={{ background: '#28a745', color: 'white' }}
+                  disabled={finalizing}
+                >
+                  {finalizing ? 'Finalizing...' : 'Finalize Trip'}
+                </button>
+              )}
+              
               <button 
                 onClick={() => navigate('/trips')}
                 className="btn btn-primary"

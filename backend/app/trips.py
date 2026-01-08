@@ -42,23 +42,12 @@ def create_trip(
     current_user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    # Parse date strings - handle both formats
-    try:
-        if '/' in trip.start_date:
-            start_date = datetime.strptime(trip.start_date, '%m/%d/%Y').date()
-            end_date = datetime.strptime(trip.end_date, '%m/%d/%Y').date()
-        else:
-            start_date = datetime.strptime(trip.start_date, '%Y-%m-%d').date()
-            end_date = datetime.strptime(trip.end_date, '%Y-%m-%d').date()
-    except (ValueError, AttributeError):
-        raise HTTPException(status_code=422, detail="Invalid date format. Use YYYY-MM-DD or MM/DD/YYYY")
-    
     db_trip = models.Trip(
         name=trip.name,
         country=trip.country,
         description=trip.description,
-        start_date=start_date,
-        end_date=end_date,
+        start_date=trip.start_date,
+        end_date=trip.end_date,
         budget=trip.budget,
         user_id=current_user.id
     )
@@ -156,6 +145,25 @@ def update_trip(
     for field, value in trip_update.dict(exclude_unset=True).items():
         setattr(trip, field, value)
     
+    db.commit()
+    db.refresh(trip)
+    return trip
+
+@router.put("/{trip_id}/finalize", response_model=schemas.Trip)
+def finalize_trip(
+    trip_id: int,
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    trip = db.query(models.Trip).filter(
+        models.Trip.id == trip_id,
+        models.Trip.user_id == current_user.id
+    ).first()
+    
+    if not trip:
+        raise HTTPException(status_code=404, detail="Trip not found")
+    
+    trip.status = "completed"
     db.commit()
     db.refresh(trip)
     return trip

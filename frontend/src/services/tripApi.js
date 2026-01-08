@@ -80,6 +80,11 @@ const tripApi = {
   deleteItinerarySection: async (tripId, sectionId) => {
     const response = await axios.delete(`${API_BASE_URL}/trips/${tripId}/sections/${sectionId}`, getAuthHeaders())
     return response.data
+  },
+
+  finalizeTrip: async (tripId) => {
+    const response = await axios.put(`${API_BASE_URL}/trips/${tripId}/finalize`, {}, getAuthHeaders())
+    return response.data
   }
 }
 

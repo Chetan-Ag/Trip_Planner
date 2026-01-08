@@ -32,7 +32,7 @@ const CalendarView = () => {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
     
     const tripForDate = trips.find(trip => 
-      dateStr >= trip.startDate && dateStr <= trip.endDate
+      dateStr >= trip.start_date && dateStr <= trip.end_date
     )
     
     setSelectedTrip(tripForDate)
@@ -51,7 +51,7 @@ const CalendarView = () => {
     const monthEnd = `${year}-${String(month + 2).padStart(2, '0')}-01`
 
     return trips.filter(trip => 
-      trip.startDate < monthEnd && trip.endDate >= monthStart
+      trip.start_date < monthEnd && trip.end_date >= monthStart
     )
   }
 
@@ -121,7 +121,7 @@ const CalendarView = () => {
               <div className="card">
                 <h3>Selected Trip</h3>
                 <h4>{selectedTrip.name}</h4>
-                <p><strong>Dates:</strong> {selectedTrip.startDate} - {selectedTrip.endDate}</p>
+                <p><strong>Dates:</strong> {selectedTrip.start_date} - {selectedTrip.end_date}</p>
                 <p><strong>Status:</strong> {selectedTrip.status}</p>
                 <p>{selectedTrip.description}</p>
                 <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -151,7 +151,7 @@ const CalendarView = () => {
                     <div key={trip.id} style={{ padding: '10px', background: '#f8f9fa', borderRadius: '5px' }}>
                       <h5>{trip.name}</h5>
                       <p style={{ fontSize: '0.9rem', margin: '5px 0' }}>
-                        {trip.startDate} - {trip.endDate}
+                        {trip.start_date} - {trip.end_date}
                       </p>
                       <Link to={`/itinerary/${trip.id}`} style={{ fontSize: '0.8rem' }}>
                         View Details
